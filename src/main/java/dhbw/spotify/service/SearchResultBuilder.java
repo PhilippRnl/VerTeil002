@@ -1,7 +1,11 @@
 package dhbw.spotify.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dhbw.pojo.result.search.SearchResult;
+import dhbw.pojo.result.search.SearchResultList;
+import dhbw.pojo.search.album.Albums;
+import dhbw.pojo.search.album.Item;
 import dhbw.pojo.search.album.SearchAlbum;
+import dhbw.pojo.search.track.Album;
 import dhbw.pojo.search.track.SearchTrack;
 import dhbw.pojo.search.artist.SearchArtist;
 import dhbw.spotify.service.SearchWebservice;
@@ -10,47 +14,82 @@ import dhbw.spotify.SpotifyRequest;
 import dhbw.spotify.WrongRequestTypeException;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static dhbw.spotify.RequestCategory.ALBUM;
 
 public class SearchResultBuilder {
     static ObjectMapper mapper = new ObjectMapper();
-    public static SearchResult buildSearchResult (RequestCategory requestCategory, String json, String query) throws IOException {
+        public static SearchResult buildSearchResult (RequestCategory requestCategory, String json, String query) throws IOException {
+        SearchResult r = new SearchResult();
+        List<SearchResultList> list = new ArrayList<SearchResultList> ();
+        r.setSearchTerm(null);
+        r.setSearchCategory(null);
+        r.setResults(null);
+        r.setSearchCategory(requestCategory.toString());
+        r.setSearchTerm(query);
 
         switch(requestCategory){
             case ALBUM:
-                return buildAlbum(json);
-
+                list = buildAlbum(json);
                 break;
 
             case TRACK:
 
-                return buildTrack(json);
-            break;
+                list = buildTrack(json);
+                break;
 
             case ARTIST:
-                return buildArtist(json);
-            break;
+                list = buildArtist(json);
+                break;
 
         }
-
-        SearchResult searchResult = new SearchResult(query, requestCategory, resultList);
-        return searchResult;
-
+        r.setResults(list);
+        return r;
     }
 
-    public static SearchResult buildAlbum(String json) throws IOException {
+    public static List<SearchResultList> buildAlbum(String json) throws IOException {
+        List<SearchResultList> hilfsliste = new ArrayList<SearchResultList> ();
         SearchAlbum searchAlbum = mapper.readValue(json, SearchAlbum.class);
-
-
+        for (Item a : searchAlbum.getAlbums().getItems()) {
+            SearchResultList searchResultList = new SearchResultList();
+            searchResultList.setId(a.getId());
+            searchResultList.setTitle(a.getName());
+            searchResultList.setDescription(a.getType());
+            searchResultList.setPlayLink(a.getUri());
+            hilfsliste.add(searchResultList);
+        }
+        return hilfsliste;
     }
 
-    public static SearchResult buildTrack(String json) throws IOException {
+
+    public static List<SearchResultList> buildTrack(String json) throws IOException {
         SearchTrack searchTrack = mapper.readValue (json, SearchTrack.class);
-
+        List<SearchResultList> hilfsliste = new ArrayList<SearchResultList> ();
+        for (dhbw.pojo.search.track.Item a : searchTrack.getTracks().getItems()) {
+            SearchResultList searchResultList = new SearchResultList();
+            searchResultList.setId(a.getId());
+            searchResultList.setTitle(a.getName());
+            searchResultList.setDescription(a.getType());
+            searchResultList.setPlayLink(a.getUri());
+            hilfsliste.add(searchResultList);
+        }
+        return hilfsliste;
     }
-    public static SearchResult buildArtist(String json) throws IOException {
-        SearchArtist searchArtist = mapper.readValue(json, SearchArtist.class);
 
+
+    public static List<SearchResultList> buildArtist(String json) throws IOException {
+        SearchArtist searchArtist = mapper.readValue(json, SearchArtist.class);
+        List<SearchResultList> hilfsliste = new ArrayList<SearchResultList> ();
+        for (dhbw.pojo.search.artist.Item a : searchArtist.getArtists().getItems()) {
+            SearchResultList searchResultList = new SearchResultList();
+            searchResultList.setId(a.getId());
+            searchResultList.setTitle(a.getName());
+            searchResultList.setDescription(a.getType());
+            searchResultList.setPlayLink(a.getUri());
+            hilfsliste.add(searchResultList);
+        }
+        return hilfsliste;
     }
 }
