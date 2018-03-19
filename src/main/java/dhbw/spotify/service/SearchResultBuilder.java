@@ -9,37 +9,48 @@ import dhbw.spotify.RequestCategory;
 import dhbw.spotify.SpotifyRequest;
 import dhbw.spotify.WrongRequestTypeException;
 
+import java.io.IOException;
+
 import static dhbw.spotify.RequestCategory.ALBUM;
 
 public class SearchResultBuilder {
-    public static SearchResult buildSearchResult (RequestCategory requestCategory) {
-        ObjectMapper mapper = new ObjectMapper();
+    static ObjectMapper mapper = new ObjectMapper();
+    public static SearchResult buildSearchResult (RequestCategory requestCategory, String json, String query) throws IOException {
+
         switch(requestCategory){
             case ALBUM:
-                SearchAlbum searchAlbum = mapper.readValue(json, SearchAlbum.class);
-                searchAlbum.getAlbums();
-                return searchAlbum;
+                return buildAlbum(json);
+
                 break;
 
             case TRACK:
-                SearchTrack searchTrack = mapper.readValue(json, SearchTrack.class);
-                searchTrack.getTracks();
-                return searchTrack;
+
+                return buildTrack(json);
             break;
 
             case ARTIST:
-                SearchArtist searchArtist= mapper.readValue(json, SearchTrack.class);
-                searchTrack.getTracks();
-                return searchTrack;
+                return buildArtist(json);
             break;
 
         }
 
+        SearchResult searchResult = new SearchResult(query, requestCategory, resultList);
+        return searchResult;
+
     }
 
-    public static buildSearchResultAlbum(){
-        
+    public static SearchResult buildAlbum(String json) throws IOException {
+        SearchAlbum searchAlbum = mapper.readValue(json, SearchAlbum.class);
 
+
+    }
+
+    public static SearchResult buildTrack(String json) throws IOException {
+        SearchTrack searchTrack = mapper.readValue (json, SearchTrack.class);
+
+    }
+    public static SearchResult buildArtist(String json) throws IOException {
+        SearchArtist searchArtist = mapper.readValue(json, SearchArtist.class);
 
     }
 }

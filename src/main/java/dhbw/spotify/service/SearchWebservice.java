@@ -28,17 +28,14 @@ public class SearchWebservice {
 
     @RequestMapping("/search")
     public SearchResult search (@RequestParam("query") String query, @RequestParam("type")RequestCategory requestCategory) throws WrongRequestTypeException, IOException {
-        SearchResult searchResult = new SearchResult();
         Optional<String> optional = spotifyRequest.performeRequestSearch(requestCategory, query);
         String json;
         if (optional.isPresent()) {
             json = optional.get();
         }
-        searchResult.
+        SearchResultBuilder.buildSearchResult(requestCategory, json, query);
 
-            return searchAlbum;
-        }
     }
-
-
 }
+
+
