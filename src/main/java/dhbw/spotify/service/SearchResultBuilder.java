@@ -2,22 +2,14 @@ package dhbw.spotify.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dhbw.pojo.result.search.SearchResult;
 import dhbw.pojo.result.search.SearchResultList;
-import dhbw.pojo.search.album.Albums;
 import dhbw.pojo.search.album.Item;
 import dhbw.pojo.search.album.SearchAlbum;
-import dhbw.pojo.search.track.Album;
 import dhbw.pojo.search.track.SearchTrack;
 import dhbw.pojo.search.artist.SearchArtist;
-import dhbw.spotify.service.SearchWebservice;
 import dhbw.spotify.RequestCategory;
-import dhbw.spotify.SpotifyRequest;
-import dhbw.spotify.WrongRequestTypeException;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import static dhbw.spotify.RequestCategory.ALBUM;
 
 public class SearchResultBuilder {
     static ObjectMapper mapper = new ObjectMapper();
@@ -34,16 +26,12 @@ public class SearchResultBuilder {
             case ALBUM:
                 list = buildAlbum(json);
                 break;
-
             case TRACK:
-
                 list = buildTrack(json);
                 break;
-
             case ARTIST:
                 list = buildArtist(json);
                 break;
-
         }
         r.setResults(list);
         return r;
@@ -63,7 +51,6 @@ public class SearchResultBuilder {
         return hilfsliste;
     }
 
-
     public static List<SearchResultList> buildTrack(String json) throws IOException {
         SearchTrack searchTrack = mapper.readValue (json, SearchTrack.class);
         List<SearchResultList> hilfsliste = new ArrayList<SearchResultList> ();
@@ -77,7 +64,6 @@ public class SearchResultBuilder {
         }
         return hilfsliste;
     }
-
 
     public static List<SearchResultList> buildArtist(String json) throws IOException {
         SearchArtist searchArtist = mapper.readValue(json, SearchArtist.class);
