@@ -1,10 +1,9 @@
 package dhbw.pojo.result.detail;
 
-
-
 public class DetailResult {
     private String title;
     private String info;
+
 
     public DetailResult(String title, String info) {
         this.title = title;

@@ -39,7 +39,7 @@ $(document).ready(() => {
                 	    + item.title
                 	    + '</td><td>'
                 	    + item.description
-            	        + '</td><td>'
+                        + '</td><td>'
                 	    + '<a class="waves-effect waves-light btn" data-typeid="' + searchType + '"data-spotifyid="' + item.id + '" id="infoButton"><i class="material-icons left">info</i>more</a>&nbsp;'
             	        + '<a class="waves-effect waves-light btn" data-spotifylink="' + item.playLink + '" id="playButton"><i class="material-icons left">play_circle_filled</i>play</a>'
             	        + '</td></tr>';
